@@ -56,7 +56,7 @@ namespace MovingDots
                     d.Vector.x = Math.Abs(d.Vector.x);
                     d.Position.x += d.Vector.x;
                 }
-                if (SecondDot.x-d.diam <= newPosx)
+                if (SecondDot.x-d.diam-10 <= newPosx)
                 {
                     d.Vector.x = -Math.Abs(d.Vector.x);
                     d.Position.x += d.Vector.x;
@@ -67,7 +67,7 @@ namespace MovingDots
                     d.Vector.y = Math.Abs(d.Vector.y);
                     d.Position.y += d.Vector.y;
                 }
-                if (SecondDot.y-d.diam <= newPosy)
+                if (SecondDot.y-d.diam-40 <= newPosy)
                 {
                     d.Vector.y = -Math.Abs(d.Vector.y);
                     d.Position.y += d.Vector.y;
