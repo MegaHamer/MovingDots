@@ -12,7 +12,7 @@ namespace MovingDots
 {
     public partial class Form1 : Form
     {
-        List<Dot> dots = new List<Dot> { };
+        Canvas c;
         public Form1()
         {
             InitializeComponent();
@@ -20,56 +20,24 @@ namespace MovingDots
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            GenerateNewDots();
-        }
-        private void GenerateNewDots()
-        {
-            Random r = new Random();
-            dots.Clear();
-            for (int i = 0; i < 100; i++)
-            {
-                dots.Add(new Dot(r, 0,0,this.Width,this.Height,true,true,100));
-            }
-        }
-        private void draw_points()
-        {
-            Bitmap Image = new Bitmap(this.Width, this.Height);
-            Graphics gr = Graphics.FromImage(Image);
-            gr.FillRectangle(Brushes.White, 0, 0, Width, Height);
-            Pen pn = new Pen(Color.Red, 1);
-
-
-            foreach (Dot d in dots)
-            {
-                gr.DrawEllipse(pn, (float) d.Position.x,(float) d.Position.y, 10, 10);
-            }
-            var FormG = CreateGraphics();
-            FormG.DrawImageUnscaled(Image, 0, 0);
-        }
-        private void clear_scr()
-        {
-            Graphics gr = this.CreateGraphics();
-            //gr.Clear(SystemColors.Control);
+            c = new Canvas((Form)sender,0, 0, Width, Height);
+            c.GenerateNewDots();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            draw_points();
+            c.draw_points();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            clear_scr();
+            
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            foreach (Dot d in dots)
-            {
-                d.Step();
-            }
-            clear_scr();
-            draw_points();
+            c.Step();
+            c.draw_points();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -91,7 +59,13 @@ namespace MovingDots
 
         private void button5_Click(object sender, EventArgs e)
         {
-            GenerateNewDots();
+            c.GenerateNewDots();
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            c.SecondDot.x = Width;
+            c.SecondDot.y = Height;
         }
     }
 }
