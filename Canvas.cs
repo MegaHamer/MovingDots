@@ -34,12 +34,16 @@ namespace MovingDots
         public Point FirstDot;
         public Point SecondDot;
         List<Dot> dots = new List<Dot> { };
+        public int dotCount;
+        public bool[,] tri;
+        public double legthBetween = 100;
         public Form canv;
-        public Canvas(Form graph,int x1,int y1,int x2,int y2)
+        public Canvas(Form graph,int x1,int y1,int x2,int y2,int dotCount = 100)
         {
             canv = graph;
             FirstDot = new Point(Math.Min(x1, x2), Math.Min(y1, y2));
             SecondDot = new Point(Math.Max(x1, x2), Math.Max(y1, y2));
+            this.dotCount = dotCount;
         }
         public void Step()
         {
@@ -92,19 +96,65 @@ namespace MovingDots
 
             Bitmap Image = new Bitmap(width,height);
             Graphics gr = Graphics.FromImage(Image);
-
+            //чистый холст
             gr.FillRectangle(Brushes.White, (int)FirstDot.x, (int)FirstDot.y, width, height);
             Pen pn = new Pen(Color.Red, 1);
 
+            drawLines(gr);
 
             foreach (Dot d in dots)
             {
+                //круг
                 gr.DrawEllipse(pn, (float)d.Position.x, (float)d.Position.y, d.diam, d.diam);
-                gr.FillRectangle(Brushes.Green, (float)d.Position.x, (float)d.Position.y, d.diam, d.diam);
+                //квадрат
+                //gr.FillRectangle(Brushes.Green, (float)d.Position.x, (float)d.Position.y, d.diam, d.diam);
             }
+
             var FormG = canv.CreateGraphics();
             FormG.DrawImageUnscaled(Image, (int) FirstDot.x, (int) FirstDot.y);
         }
 
+        public void SetTrigonTable()
+        {
+            tri = new bool[dotCount, dotCount];
+            for (int i = 0; i < dotCount; i++)
+            {
+                for (int j = 0; j < i; j++)
+                {
+                    if (lengthBetweenDots(dots[i], dots[j]) < legthBetween)
+                        tri[i, j] = true;
+                }
+            }
+        }
+        public double lengthBetweenDots(Dot d1, Dot d2)
+        {
+            Double result;
+
+            double dx = d2.Position.x - d1.Position.x;
+            double dy = d2.Position.y - d1.Position.y;
+
+            result = Math.Sqrt(dx * dx + dy * dy);
+
+            return result;
+        }
+        public void drawLines(Graphics gr)
+        {
+            SetTrigonTable();
+
+            Pen pn = new Pen(Color.Blue, 1);
+
+            for (int i = 0; i < dotCount; i++)
+            {
+                for (int j = 0; j < i; j++)
+                {
+                    if (tri[i, j])
+                    {
+                        float x1 = (float) dots[i].Position.x, y1 = (float)dots[i].Position.y,
+                             x2 = (float)dots[j].Position.x, y2 = (float)dots[j].Position.y;
+                        gr.DrawLine(pn, x1, y1, x2, y2);
+                    }
+                }
+            }
+        }
     }
 }
