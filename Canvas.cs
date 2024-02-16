@@ -84,7 +84,7 @@ namespace MovingDots
         {
             Random r = new Random();
             dots.Clear();
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < dotCount; i++)
             {
                 dots.Add(new Dot(r, (int) FirstDot.x, (int)FirstDot.y, (int)SecondDot.x, (int)SecondDot.y,10, true, true));
             }
@@ -99,12 +99,14 @@ namespace MovingDots
             //чистый холст
             gr.FillRectangle(Brushes.White, (int)FirstDot.x, (int)FirstDot.y, width, height);
             Pen pn = new Pen(Color.Red, 1);
+            Brush br = new SolidBrush(Color.Red);
 
             drawLines(gr);
 
             foreach (Dot d in dots)
             {
                 //круг
+                gr.FillEllipse(br, (float)d.Position.x, (float)d.Position.y, d.diam, d.diam);
                 gr.DrawEllipse(pn, (float)d.Position.x, (float)d.Position.y, d.diam, d.diam);
                 //квадрат
                 //gr.FillRectangle(Brushes.Green, (float)d.Position.x, (float)d.Position.y, d.diam, d.diam);
